@@ -14,7 +14,8 @@ import {
   CardContent, 
   Grid,
   Link as MuiLink,
-  CircularProgress
+  CircularProgress,
+  CardActionArea
 } from '@mui/material';
 import Link from 'next/link';
 import { SaasProduct, Founder, Tool } from '../../../types';
@@ -102,14 +103,16 @@ export default function ProductDetailPage() {
             {founders.map((founder) => (
               <Grid item key={founder.id} xs={12} sm={6} md={4}>
                 <Card>
-                  <CardContent>
-                    <Typography variant="h6" component="div">
-                      {founder.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {founder.bio}
-                    </Typography>
-                  </CardContent>
+                  <CardActionArea component={Link} href={`/founders/${founder.id}`}>
+                    <CardContent>
+                      <Typography variant="h6" component="div">
+                        {founder.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {founder.bio}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
                 </Card>
               </Grid>
             ))}

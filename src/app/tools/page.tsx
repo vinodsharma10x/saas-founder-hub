@@ -14,48 +14,34 @@ import {
   Box
 } from '@mui/material';
 import Link from 'next/link';
-import { Tool, ToolCategory } from '../../types';
+import { Tool } from '../../types';
 import Navbar from '../../components/Navbar';
 import MotionWrapper from '../../components/MotionWrapper';
+
+const journeyStages = ['Ideation', 'Validation', 'Building', 'Growth', 'Scale'];
 
 export default function ToolsPage() {
   const [tools, setTools] = useState<Tool[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [categories, setCategories] = useState<{[key: number]: ToolCategory & {tools: Tool[]}}>({});
-  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  const [selectedStage, setSelectedStage] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchToolsAndCategories() {
-      const { data: toolsData, error: toolsError } = await supabase
+    async function fetchTools() {
+      const { data, error } = await supabase
         .from('tools')
-        .select('*, tool_categories(id, name)');
-    
-      if (toolsError) console.error('Error fetching tools:', toolsError);
-      else {
-        setTools(toolsData || []);
-        
-        const categoryMap = toolsData.reduce((acc, tool) => {
-          if (tool.tool_categories) {
-            const categoryId = tool.tool_categories.id;
-            if (!acc[categoryId]) {
-              acc[categoryId] = { ...tool.tool_categories, tools: [] };
-            }
-            acc[categoryId].tools.push(tool);
-          }
-          return acc;
-        }, {} as {[key: number]: ToolCategory & {tools: Tool[]}});
-
-        setCategories(categoryMap);
-      }
+        .select('*');
+      
+      if (error) console.error('Error fetching tools:', error);
+      else setTools(data || []);
     }
 
-    fetchToolsAndCategories();
+    fetchTools();
   }, []);
 
   const filteredTools = tools.filter(tool => 
     (tool.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
      tool.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (selectedCategories.length === 0 || selectedCategories.includes(tool.category_id))
+    (!selectedStage || tool.stage === selectedStage)
   );
 
   const highlightText = (text: string, highlight: string) => {
@@ -90,51 +76,38 @@ export default function ToolsPage() {
             sx={{ mb: 2 }}
           />
           <Box sx={{ mb: 2 }}>
-            {Object.values(categories).map(category => (
+            {journeyStages.map((stage) => (
               <Chip
-                key={category.id}
-                label={category.name}
-                onClick={() => setSelectedCategories(prev => 
-                  prev.includes(category.id) ? prev.filter(c => c !== category.id) : [...prev, category.id]
-                )}
-                color={selectedCategories.includes(category.id) ? "primary" : "default"}
+                key={stage}
+                label={stage}
+                onClick={() => setSelectedStage(selectedStage === stage ? null : stage)}
+                color={selectedStage === stage ? "primary" : "default"}
                 sx={{ mr: 1, mb: 1 }}
               />
             ))}
           </Box>
         </MotionWrapper>
-        {Object.entries(categories).map(([categoryId, category]) => (
-          <Box key={categoryId} sx={{ mb: 4 }}>
-            <Typography variant="h4" component="h2" gutterBottom>
-              {category.name}
-            </Typography>
-            <Grid container spacing={3}>
-              {category.tools
-                .filter(tool => 
-                  tool.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                  tool.description.toLowerCase().includes(searchTerm.toLowerCase())
-                )
-                .map((tool: Tool) => (
-                  <Grid item key={tool.id} xs={12} sm={6} md={4}>
-                    <MotionWrapper>
-                      <Card>
-                        <CardActionArea component={Link} href={`/tools/${tool.id}`}>
-                          <CardContent>
-                            <Typography variant="h5" component="div">
-                              {highlightText(tool.name, searchTerm)}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {highlightText(tool.description, searchTerm)}
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                      </Card>
-                    </MotionWrapper>
-                  </Grid>
-                ))}
+        <Grid container spacing={3}>
+          {filteredTools.map((tool: Tool) => (
+            <Grid item key={tool.id} xs={12} sm={6} md={4}>
+              <MotionWrapper>
+                <Card>
+                  <CardActionArea component={Link} href={`/tools/${tool.id}`}>
+                    <CardContent>
+                      <Typography variant="h5" component="div">
+                        {highlightText(tool.name, searchTerm)}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {highlightText(tool.description, searchTerm)}
+                      </Typography>
+                      <Chip label={tool.stage} color="primary" size="small" sx={{ mt: 1 }} />
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </MotionWrapper>
             </Grid>
-          </Box>
-        ))}
+          ))}
+        </Grid>
       </Container>
     </>
   );

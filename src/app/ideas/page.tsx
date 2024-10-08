@@ -9,16 +9,21 @@ import {
   Card, 
   CardContent, 
   CardActionArea,
-  TextField
+  TextField,
+  Chip,
+  Box
 } from '@mui/material';
 import Link from 'next/link';
 import { Idea } from '../../types';
 import Navbar from '../../components/Navbar';
 import MotionWrapper from '../../components/MotionWrapper';
 
+const journeyStages = ['Ideation', 'Validation', 'Building', 'Growth', 'Scale'];
+
 export default function IdeasPage() {
   const [ideas, setIdeas] = useState<Idea[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedStage, setSelectedStage] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchIdeas() {
@@ -34,8 +39,9 @@ export default function IdeasPage() {
   }, []);
 
   const filteredIdeas = ideas.filter(idea => 
-    idea.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    idea.description.toLowerCase().includes(searchTerm.toLowerCase())
+    (idea.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     idea.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (!selectedStage || idea.stage === selectedStage)
   );
 
   const highlightText = (text: string, highlight: string) => {
@@ -69,11 +75,22 @@ export default function IdeasPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{ mb: 2 }}
           />
+          <Box sx={{ mb: 2 }}>
+            {journeyStages.map((stage) => (
+              <Chip
+                key={stage}
+                label={stage}
+                onClick={() => setSelectedStage(selectedStage === stage ? null : stage)}
+                color={selectedStage === stage ? "primary" : "default"}
+                sx={{ mr: 1, mb: 1 }}
+              />
+            ))}
+          </Box>
         </MotionWrapper>
         <Grid container spacing={3}>
-          {filteredIdeas.map((idea: Idea, index: number) => (
+          {filteredIdeas.map((idea: Idea) => (
             <Grid item key={idea.id} xs={12} sm={6} md={4}>
-              <MotionWrapper delay={index * 0.1}>
+              <MotionWrapper>
                 <Card>
                   <CardActionArea component={Link} href={`/ideas/${idea.id}`}>
                     <CardContent>
@@ -83,6 +100,7 @@ export default function IdeasPage() {
                       <Typography variant="body2" color="text.secondary">
                         {highlightText(idea.description, searchTerm)}
                       </Typography>
+                      <Chip label={idea.stage} color="primary" size="small" sx={{ mt: 1 }} />
                     </CardContent>
                   </CardActionArea>
                 </Card>
