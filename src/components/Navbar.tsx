@@ -3,14 +3,23 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 export default function Navbar() {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [journeyAnchorEl, setJourneyAnchorEl] = useState<null | HTMLElement>(null);
+  const [storiesAnchorEl, setStoriesAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleJourneyClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setJourneyAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleStoriesClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setStoriesAnchorEl(event.currentTarget);
+  };
+
+  const handleJourneyClose = () => {
+    setJourneyAnchorEl(null);
+  };
+
+  const handleStoriesClose = () => {
+    setStoriesAnchorEl(null);
   };
 
   return (
@@ -26,23 +35,23 @@ export default function Navbar() {
           <Button
             aria-controls="journey-menu"
             aria-haspopup="true"
-            onClick={handleClick}
+            onClick={handleJourneyClick}
             sx={{ my: 1, mx: 1.5 }}
           >
             Founder's Journey
           </Button>
           <Menu
             id="journey-menu"
-            anchorEl={anchorEl}
+            anchorEl={journeyAnchorEl}
             keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
+            open={Boolean(journeyAnchorEl)}
+            onClose={handleJourneyClose}
           >
-            <MenuItem onClick={handleClose} component={Link} href="/journey/ideation">Ideation</MenuItem>
-            <MenuItem onClick={handleClose} component={Link} href="/journey/validation">Validation</MenuItem>
-            <MenuItem onClick={handleClose} component={Link} href="/journey/building">Building</MenuItem>
-            <MenuItem onClick={handleClose} component={Link} href="/journey/growth">Growth</MenuItem>
-            <MenuItem onClick={handleClose} component={Link} href="/journey/scale">Scale</MenuItem>
+            <MenuItem onClick={handleJourneyClose} component={Link} href="/journey/ideation">Ideation</MenuItem>
+            <MenuItem onClick={handleJourneyClose} component={Link} href="/journey/validation">Validation</MenuItem>
+            <MenuItem onClick={handleJourneyClose} component={Link} href="/journey/building">Building</MenuItem>
+            <MenuItem onClick={handleJourneyClose} component={Link} href="/journey/growth">Growth</MenuItem>
+            <MenuItem onClick={handleJourneyClose} component={Link} href="/journey/scale">Scale</MenuItem>
           </Menu>
           <Button component={Link} href="/ideas" variant="text" sx={{ my: 1, mx: 1.5 }}>
             Ideas
@@ -50,17 +59,25 @@ export default function Navbar() {
           <Button component={Link} href="/tools" variant="text" sx={{ my: 1, mx: 1.5 }}>
             Tools
           </Button>
-          <Button component={Link} href="/success-stories" variant="text" sx={{ my: 1, mx: 1.5 }}>
+          <Button
+            aria-controls="success-stories-menu"
+            aria-haspopup="true"
+            onClick={handleStoriesClick}
+            sx={{ my: 1, mx: 1.5 }}
+          >
             Success Stories
           </Button>
-         
-        <Button component={Link} href="/success-stories/products" variant="text" sx={{ my: 1, mx: 1.5 }}>
-          Products
-        </Button>
-        <Button component={Link} href="/success-stories/founders" variant="text" sx={{ my: 1, mx: 1.5 }}>
-          Founders
-        </Button>
-
+          <Menu
+            id="success-stories-menu"
+            anchorEl={storiesAnchorEl}
+            keepMounted
+            open={Boolean(storiesAnchorEl)}
+            onClose={handleStoriesClose}
+          >
+            <MenuItem onClick={handleStoriesClose} component={Link} href="/success-stories">All Stories</MenuItem>
+            <MenuItem onClick={handleStoriesClose} component={Link} href="/success-stories/products">Products</MenuItem>
+            <MenuItem onClick={handleStoriesClose} component={Link} href="/success-stories/founders">Founders</MenuItem>
+          </Menu>
         </nav>
       </Toolbar>
     </AppBar>
