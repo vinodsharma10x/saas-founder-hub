@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Container, Typography, Grid, Card, CardContent, Button, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Container, Typography, Grid, Card, CardContent, Button, List, ListItem, ListItemIcon, ListItemText, CardMedia } from '@mui/material';
 import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Link from 'next/link';
@@ -19,13 +19,13 @@ export default function IdeationPage() {
       const { data: ideasData, error: ideasError } = await supabase
         .from('ideas')
         .select('*')
-        .eq('stage', 'ideation')
+        .eq('stage', 'Ideation')
         .limit(3);
 
       const { data: toolsData, error: toolsError } = await supabase
         .from('tools')
         .select('*')
-        .eq('category', 'ideation')
+        .eq('stage', 'Ideation')
         .limit(3);
 
       if (ideasError) console.error('Error fetching ideas:', ideasError);
@@ -138,17 +138,23 @@ export default function IdeationPage() {
           <Grid container spacing={4}>
             {relatedTools.map((tool) => (
               <Grid item key={tool.id} xs={12} sm={6} md={4}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6" component="div">
+                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  <CardMedia
+                    component="img"
+                    sx={{ height: 140, objectFit: 'contain', p: 2 }}
+                    image={tool.logo_url}
+                    alt={tool.name}
+                  />
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="h5" component="div" gutterBottom>
                       {tool.name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       {tool.description}
                     </Typography>
                   </CardContent>
-                  <Button component={Link} href={`/tools/${tool.id}`} size="small" color="primary">
-                    Explore Tool
+                  <Button component={Link} href={`/tools/${tool.id}`} size="small" color="primary" sx={{ m: 2 }}>
+                    Learn More
                   </Button>
                 </Card>
               </Grid>

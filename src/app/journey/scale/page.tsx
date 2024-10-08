@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Container, Typography, Grid, Card, CardContent, Button, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { Container, Typography, Grid, Card, CardContent, Button, List, ListItem, ListItemIcon, ListItemText, CardMedia } from '@mui/material';
 import PieChartOutlinedIcon from '@mui/icons-material/PieChartOutlined';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Link from 'next/link';
 import Navbar from '../../../components/Navbar';
 import MotionWrapper from '../../../components/MotionWrapper';
@@ -19,13 +19,13 @@ export default function ScalePage() {
       const { data: ideasData, error: ideasError } = await supabase
         .from('ideas')
         .select('*')
-        .eq('stage', 'scale')
+        .eq('stage', 'Scale')
         .limit(3);
 
       const { data: toolsData, error: toolsError } = await supabase
         .from('tools')
         .select('*')
-        .eq('category', 'scale')
+        .eq('stage', 'Scale')
         .limit(3);
 
       if (ideasError) console.error('Error fetching ideas:', ideasError);
@@ -109,7 +109,36 @@ export default function ScalePage() {
             </Grid>
           </Grid>
 
-          {/* Related Ideas and Useful Tools sections remain the same */}
+          <Typography variant="h4" gutterBottom color="primary" sx={{ mt: 6 }}>
+            Useful Tools for Scaling
+          </Typography>
+          <Grid container spacing={4}>
+            {relatedTools.map((tool) => (
+              <Grid item key={tool.id} xs={12} sm={6} md={4}>
+                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  <CardMedia
+                    component="img"
+                    sx={{ height: 140, objectFit: 'contain', p: 2 }}
+                    image={tool.logo_url}
+                    alt={tool.name}
+                  />
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography variant="h5" component="div" gutterBottom>
+                      {tool.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {tool.description}
+                    </Typography>
+                  </CardContent>
+                  <Button component={Link} href={`/tools/${tool.id}`} size="small" color="primary" sx={{ m: 2 }}>
+                    Learn More
+                  </Button>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+
+          {/* Related Ideas section remains the same */}
           {/* ... */}
         </MotionWrapper>
       </Container>
