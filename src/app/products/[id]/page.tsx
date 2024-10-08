@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
+import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@mui/lab';
+import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import { 
   Container, 
   Typography, 
@@ -126,6 +128,46 @@ export default function ProductDetailPage() {
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       {tool.description}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+
+          <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 4 }}>
+            Timeline
+          </Typography>
+          <Timeline>
+            {product.timeline?.map((event, index) => (
+              <TimelineItem key={index}>
+                <TimelineSeparator>
+                  <TimelineDot />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>
+                  <Typography variant="h6" component="span">
+                    {event.year}
+                  </Typography>
+                  <Typography>{event.event}</Typography>
+                </TimelineContent>
+              </TimelineItem>
+            ))}
+          </Timeline>
+
+          <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 4 }}>
+            Success Metrics
+          </Typography>
+          <Grid container spacing={2}>
+            {Object.entries(product.success_metrics || {}).map(([key, value]) => (
+              <Grid item xs={12} sm={6} md={4} key={key}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6" component="div">
+                      {key.replace(/_/g, ' ')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {value}
                     </Typography>
                   </CardContent>
                 </Card>

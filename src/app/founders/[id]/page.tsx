@@ -3,6 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { supabase } from '../../../lib/supabase';
+
+import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@mui/lab';
+import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
+
 import { 
   Container, 
   Typography, 
@@ -95,6 +99,35 @@ export default function FounderDetailPage() {
             </MuiLink>
           )}
           
+          <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 4 }}>
+            Key Lessons
+          </Typography>
+          <ul>
+            {founder.key_lessons?.map((lesson, index) => (
+              <li key={index}>{lesson}</li>
+            ))}
+          </ul>
+
+          <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 4 }}>
+            Pivotal Moments
+          </Typography>
+          <Timeline>
+            {founder.pivotal_moments?.map((moment, index) => (
+              <TimelineItem key={index}>
+                <TimelineSeparator>
+                  <TimelineDot />
+                  <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>
+                  <Typography variant="h6" component="span">
+                    {moment.year}
+                  </Typography>
+                  <Typography>{moment.event}</Typography>
+                </TimelineContent>
+              </TimelineItem>
+            ))}
+          </Timeline>
+
           <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 4 }}>
             Products
           </Typography>

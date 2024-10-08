@@ -6,11 +6,13 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Idea } from '../../../types/Idea';
 import Navbar from '../../../components/Navbar';
+import MotionWrapper from '../../../components/MotionWrapper';
+import { Container, Typography, Button, Card, CardContent, Tabs, Tab, Box } from '@mui/material';
 
 export default function IdeaPage({ params }: { params: { id: string } }) {
   const [idea, setIdea] = useState<Idea | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('details');
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     async function fetchIdea() {
@@ -32,103 +34,86 @@ export default function IdeaPage({ params }: { params: { id: string } }) {
   }, [params.id]);
 
   if (isLoading) {
-    return <div className="text-center py-8">Loading...</div>;
+    return (
+      <>
+        <Navbar />
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4, textAlign: 'center' }}>
+          <Typography>Loading...</Typography>
+        </Container>
+      </>
+    );
   }
 
   if (!idea) {
     return notFound();
   }
 
-  return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="container mx-auto px-4 py-8"
-    >
-      <Link href="/ideas" className="text-indigo-600 hover:underline mb-4 inline-block">
-        ← Back to Ideas
-      </Link>
-      <motion.h1 
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="text-4xl font-bold mb-4"
-      >
-        {idea.title}
-      </motion.h1>
-      <motion.div 
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="bg-white shadow-md rounded-lg p-6 mb-6"
-      >
-        <p className="text-gray-600 mb-4">{idea.description}</p>
-        <div className="mb-4">
-          <span className="text-sm bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full">
-            {idea.category}
-          </span>
-        </div>
-        
-        {/* Tabs */}
-        <div className="mb-4">
-          <button 
-            onClick={() => setActiveTab('details')}
-            className={`mr-4 ${activeTab === 'details' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-gray-600'}`}
-          >
-            Details
-          </button>
-          <button 
-            onClick={() => setActiveTab('solutions')}
-            className={`mr-4 ${activeTab === 'solutions' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-gray-600'}`}
-          >
-            Solutions
-          </button>
-          <button 
-            onClick={() => setActiveTab('market')}
-            className={`${activeTab === 'market' ? 'text-indigo-600 border-b-2 border-indigo-600' : 'text-gray-600'}`}
-          >
-            Market
-          </button>
-        </div>
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue);
+  };
 
-        {/* Tab content */}
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          {activeTab === 'details' && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-2">Problem Statement</h2>
-              <p className="mb-4">{idea.details}</p>
-              <h2 className="text-2xl font-semibold mb-2">Challenges</h2>
-              <ul className="list-disc list-inside mb-4">
-                {idea.challenges.map((challenge, index) => (
-                  <li key={index}>{challenge}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {activeTab === 'solutions' && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-2">Potential Solutions</h2>
-              <ul className="list-disc list-inside mb-4">
-                {idea.potentialSolutions.map((solution, index) => (
-                  <li key={index}>{solution}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {activeTab === 'market' && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-2">Market Potential</h2>
-              <p className="mb-4">{idea.marketPotential}</p>
-            </div>
-          )}
-        </motion.div>
-      </motion.div>
-    </motion.div>
+  return (
+    <>
+      <Navbar />
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <MotionWrapper>
+          <Button component={Link} href="/ideas" variant="text" sx={{ mb: 2 }}>
+            ← Back to Ideas
+          </Button>
+          <Typography variant="h3" component="h1" gutterBottom>
+            {idea.title}
+          </Typography>
+          <Card sx={{ mb: 4 }}>
+            <CardContent>
+              <Typography variant="body1" color="text.secondary" paragraph>
+                {idea.description}
+              </Typography>
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="body2" component="span" sx={{ bgcolor: 'primary.light', color: 'primary.contrastText', px: 1, py: 0.5, borderRadius: '16px' }}>
+                  {idea.category}
+                </Typography>
+              </Box>
+              
+              <Tabs value={activeTab} onChange={handleTabChange} sx={{ mb: 2 }}>
+                <Tab label="Details" />
+                <Tab label="Solutions" />
+                <Tab label="Market" />
+              </Tabs>
+
+              <Box>
+                {activeTab === 0 && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+                    <Typography variant="h6" gutterBottom>Problem Statement</Typography>
+                    <Typography paragraph>{idea.details}</Typography>
+                    <Typography variant="h6" gutterBottom>Challenges</Typography>
+                    <ul>
+                      {idea.challenges.map((challenge, index) => (
+                        <li key={index}>{challenge}</li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
+                {activeTab === 1 && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+                    <Typography variant="h6" gutterBottom>Potential Solutions</Typography>
+                    <ul>
+                      {idea.potentialSolutions.map((solution, index) => (
+                        <li key={index}>{solution}</li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
+                {activeTab === 2 && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+                    <Typography variant="h6" gutterBottom>Market Potential</Typography>
+                    <Typography paragraph>{idea.marketPotential}</Typography>
+                  </motion.div>
+                )}
+              </Box>
+            </CardContent>
+          </Card>
+        </MotionWrapper>
+      </Container>
+    </>
   );
 }

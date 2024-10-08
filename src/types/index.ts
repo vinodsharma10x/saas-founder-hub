@@ -9,6 +9,7 @@ export type Tool = {
   founded_year: number;
   company_size: string;
   logo_url: string;
+  category_id: number | null;
 };
 
 export type Idea = {
@@ -31,6 +32,8 @@ export type Founder = {
   linkedin_url: string | null;
   twitter_handle: string | null;
   created_at: string;
+  key_lessons: string[] | null;
+  pivotal_moments: { year: number; event: string }[] | null;
 };
 
 export type SaasProduct = {
@@ -41,6 +44,8 @@ export type SaasProduct = {
   category: string | null;
   founding_year: number | null;
   created_at: string;
+  timeline: { year: number; event: string }[] | null;
+  success_metrics: { [key: string]: string } | null;
 };
 
 export type FounderProduct = {

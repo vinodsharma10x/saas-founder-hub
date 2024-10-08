@@ -1,102 +1,119 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { supabase } from '../../../lib/supabase';
-import { 
-  Container, 
-  Typography, 
-  Box, 
-  Button, 
-  Chip, 
-  Link as MuiLink, 
-  CircularProgress 
-} from '@mui/material';
+import { useState, useEffect } from 'react';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { Tool } from '../../../types';
 import Navbar from '../../../components/Navbar';
 import MotionWrapper from '../../../components/MotionWrapper';
+import { Container, Typography, Button, Card, CardContent, Tabs, Tab, Box, Chip } from '@mui/material';
 
-export default function ToolDetailPage() {
-  const { id } = useParams();
+export default function ToolPage({ params }: { params: { id: string } }) {
   const [tool, setTool] = useState<Tool | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     async function fetchTool() {
       try {
-        const { data, error } = await supabase
-          .from('tools')
-          .select('*')
-          .eq('id', id)
-          .single();
-        
-        if (error) throw error;
+        const response = await fetch(`/api/tools/${params.id}`);
+        if (!response.ok) {
+          notFound();
+        }
+        const data = await response.json();
         setTool(data);
-      } catch (err) {
-        console.error('Error fetching tool:', err);
-        setError('Failed to load tool details');
+      } catch (error) {
+        console.error('Failed to fetch tool:', error);
+        notFound();
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     }
-
     fetchTool();
-  }, [id]);
+  }, [params.id]);
+
+  if (isLoading) {
+    return (
+      <>
+        <Navbar />
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 4, textAlign: 'center' }}>
+          <Typography>Loading...</Typography>
+        </Container>
+      </>
+    );
+  }
+
+  if (!tool) {
+    return notFound();
+  }
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue);
+  };
 
   return (
     <>
       <Navbar />
-      <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-        {loading ? (
-          <CircularProgress />
-        ) : error ? (
-          <Typography color="error">{error}</Typography>
-        ) : !tool ? (
-          <Typography>Tool not found</Typography>
-        ) : (
-          <MotionWrapper>
-            <Button component={Link} href="/tools" sx={{ mb: 2 }}>
-              Back to Tools
-            </Button>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              {tool.logo_url && (
-                <img src={tool.logo_url} alt={`${tool.name} logo`} style={{ width: 50, height: 50, marginRight: 16 }} />
-              )}
-              <Typography variant="h3" component="h1">
-                {tool.name}
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <MotionWrapper>
+          <Button component={Link} href="/tools" variant="text" sx={{ mb: 2 }}>
+            ← Back to Tools
+          </Button>
+          <Typography variant="h3" component="h1" gutterBottom>
+            {tool.name}
+          </Typography>
+          <Card sx={{ mb: 4 }}>
+            <CardContent>
+              <Typography variant="body1" color="text.secondary" paragraph>
+                {tool.description}
               </Typography>
-            </Box>
-            <Typography variant="body1" paragraph>
-              {tool.description}
-            </Typography>
-            <Box sx={{ mb: 2 }}>
-              {tool.category && <Chip label={tool.category} color="primary" sx={{ mr: 1 }} />}
-              {tool.pricing_model && <Chip label={tool.pricing_model} color="secondary" />}
-            </Box>
-            {tool.features && tool.features.length > 0 && (
-              <>
-                <Typography variant="h6" gutterBottom>Features:</Typography>
-                <ul>
-                  {tool.features.map((feature: string, index: number) => (
-                    <li key={index}>{feature}</li>
-                  ))}
-                </ul>
-              </>
-            )}
-            {tool.founded_year && tool.company_size && (
-              <Typography variant="body2" paragraph>
-                Founded in {tool.founded_year} • Company size: {tool.company_size}
-              </Typography>
-            )}
-            {tool.website && (
-              <MuiLink href={tool.website} target="_blank" rel="noopener noreferrer">
-                Visit Website
-              </MuiLink>
-            )}
-          </MotionWrapper>
-        )}
+              <Box sx={{ mb: 2 }}>
+                <Chip label={tool.category} color="primary" sx={{ mr: 1 }} />
+                <Chip label={tool.pricing_model} color="secondary" />
+              </Box>
+              
+              <Tabs value={activeTab} onChange={handleTabChange} sx={{ mb: 2 }}>
+                <Tab label="Details" />
+                <Tab label="Features" />
+                <Tab label="Company Info" />
+              </Tabs>
+
+              <Box>
+                {activeTab === 0 && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+                    <Typography variant="h6" gutterBottom>Website</Typography>
+                    <Typography paragraph>
+                      <Link href={tool.website} target="_blank" rel="noopener noreferrer">
+                        {tool.website}
+                      </Link>
+                    </Typography>
+                    <Typography variant="h6" gutterBottom>Pricing Model</Typography>
+                    <Typography paragraph>{tool.pricing_model}</Typography>
+                  </motion.div>
+                )}
+                {activeTab === 1 && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+                    <Typography variant="h6" gutterBottom>Key Features</Typography>
+                    <ul>
+                      {tool.features.map((feature, index) => (
+                        <li key={index}>{feature}</li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
+                {activeTab === 2 && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+                    <Typography variant="h6" gutterBottom>Founded</Typography>
+                    <Typography paragraph>{tool.founded_year}</Typography>
+                    <Typography variant="h6" gutterBottom>Company Size</Typography>
+                    <Typography paragraph>{tool.company_size}</Typography>
+                  </motion.div>
+                )}
+              </Box>
+            </CardContent>
+          </Card>
+        </MotionWrapper>
       </Container>
     </>
   );
