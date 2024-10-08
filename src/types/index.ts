@@ -23,3 +23,38 @@ export type Idea = {
   challenges: string;
   created_at: string;
 };
+
+export type Founder = {
+  id: number;
+  name: string;
+  bio: string | null;
+  linkedin_url: string | null;
+  twitter_handle: string | null;
+  created_at: string;
+};
+
+export type SaasProduct = {
+  id: number;
+  name: string;
+  description: string | null;
+  website: string | null;
+  category: string | null;
+  founding_year: number | null;
+  created_at: string;
+};
+
+export type FounderProduct = {
+  founder_id: number;
+  product_id: number;
+  role: string | null;
+};
+
+export type FounderTool = {
+  founder_id: number;
+  tool_id: number;
+};
+
+export type ProductTool = {
+  product_id: number;
+  tool_id: number;
+};

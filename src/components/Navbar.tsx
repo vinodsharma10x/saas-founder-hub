@@ -17,6 +17,12 @@ export default function Navbar() {
         <Button color="inherit" component={Link} href="/ideas">
           Ideas
         </Button>
+        <Button color="inherit" component={Link} href="/founders">
+          Founders
+        </Button>
+        <Button color="inherit" component={Link} href="/products">
+          Products
+        </Button>
       </Toolbar>
     </AppBar>
   );
