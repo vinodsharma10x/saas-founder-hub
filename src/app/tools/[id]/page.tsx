@@ -15,6 +15,7 @@ import {
 import Link from 'next/link';
 import { Tool } from '../../../types';
 import Navbar from '../../../components/Navbar';
+import MotionWrapper from '../../../components/MotionWrapper';
 
 export default function ToolDetailPage() {
   const { id } = useParams();
@@ -55,7 +56,7 @@ export default function ToolDetailPage() {
         ) : !tool ? (
           <Typography>Tool not found</Typography>
         ) : (
-          <>
+          <MotionWrapper>
             <Button component={Link} href="/tools" sx={{ mb: 2 }}>
               Back to Tools
             </Button>
@@ -94,7 +95,7 @@ export default function ToolDetailPage() {
                 Visit Website
               </MuiLink>
             )}
-          </>
+          </MotionWrapper>
         )}
       </Container>
     </>
