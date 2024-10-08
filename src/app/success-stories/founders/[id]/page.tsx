@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { supabase } from '../../../lib/supabase';
+import { supabase } from '../../../../lib/supabase';
 
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@mui/lab';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
@@ -14,14 +14,15 @@ import {
   Button, 
   Card, 
   CardContent, 
+  CardActionArea,
   Grid,
   Link as MuiLink,
   CircularProgress
 } from '@mui/material';
 import Link from 'next/link';
-import { Founder, SaasProduct, Tool } from '../../../types';
-import Navbar from '../../../components/Navbar';
-import MotionWrapper from '../../../components/MotionWrapper';
+import { Founder, SaasProduct, Tool } from '../../../../types';
+import Navbar from '../../../../components/Navbar';
+import MotionWrapper from '../../../../components/MotionWrapper';
 
 export default function FounderDetailPage() {
   const { id } = useParams();
@@ -129,10 +130,12 @@ export default function FounderDetailPage() {
           <Typography variant="h5" component="h2" gutterBottom sx={{ mt: 4 }}>
             Products
           </Typography>
+  
           <Grid container spacing={2}>
             {products.map((product) => (
               <Grid item key={product.id} xs={12} sm={6} md={4}>
                 <Card>
+                  <CardActionArea component={Link} href={`/success-stories/products/${product.id}`}>
                   <CardContent>
                     <Typography variant="h6" component="div">
                       {product.name}
@@ -141,6 +144,7 @@ export default function FounderDetailPage() {
                       {product.description}
                     </Typography>
                   </CardContent>
+                  </CardActionArea>
                 </Card>
               </Grid>
             ))}

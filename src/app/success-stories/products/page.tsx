@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../../lib/supabase';
 import { 
   Container, 
   Typography, 
@@ -14,9 +14,9 @@ import {
   Box
 } from '@mui/material';
 import Link from 'next/link';
-import { SaasProduct } from '../../types';
-import Navbar from '../../components/Navbar';
-import MotionWrapper from '../../components/MotionWrapper';
+import { SaasProduct } from '../../../types';
+import Navbar from '../../../components/Navbar';
+import MotionWrapper from '../../../components/MotionWrapper';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<SaasProduct[]>([]);

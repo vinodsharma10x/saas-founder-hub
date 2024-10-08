@@ -92,14 +92,14 @@ export default function SuccessStoriesPage() {
                           <Typography variant="body2" color="text.secondary" paragraph>
                             {founder.role || 'Founder'}
                           </Typography>
-                          <Button component={Link} href={`/founders/${founder.id}`} variant="outlined" size="small">
+                          <Button component={Link} href={`/success-stories/founders/${founder.id}`} variant="outlined" size="small">
                             View Founder
                           </Button>
                         </Grid>
                       </Grid>
                     ))}
                     
-                    <Button component={Link} href={`/products/${story.id}`} variant="contained" sx={{ mt: 2 }}>
+                    <Button component={Link} href={`/success-stories/products/${story.id}`} variant="contained" sx={{ mt: 2 }}>
                       View Product
                     </Button>
                   </CardContent>

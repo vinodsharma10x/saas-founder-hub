@@ -53,6 +53,14 @@ export default function Navbar() {
           <Button component={Link} href="/success-stories" variant="text" sx={{ my: 1, mx: 1.5 }}>
             Success Stories
           </Button>
+         
+        <Button component={Link} href="/success-stories/products" variant="text" sx={{ my: 1, mx: 1.5 }}>
+          Products
+        </Button>
+        <Button component={Link} href="/success-stories/founders" variant="text" sx={{ my: 1, mx: 1.5 }}>
+          Founders
+        </Button>
+
         </nav>
       </Toolbar>
     </AppBar>

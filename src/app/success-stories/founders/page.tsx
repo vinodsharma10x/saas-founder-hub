@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../../lib/supabase';
 import { 
   Container, 
   Typography, 
@@ -12,9 +12,9 @@ import {
   TextField
 } from '@mui/material';
 import Link from 'next/link';
-import { Founder } from '../../types';
-import Navbar from '../../components/Navbar';
-import MotionWrapper from '../../components/MotionWrapper';
+import { Founder } from '../../../types';
+import Navbar from '../../../components/Navbar';
+import MotionWrapper from '../../../components/MotionWrapper';
 
 export default function FoundersPage() {
   const [founders, setFounders] = useState<Founder[]>([]);

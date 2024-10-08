@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { supabase } from '../../../lib/supabase';
+import { supabase } from '../../../../lib/supabase';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@mui/lab';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import { 
@@ -18,9 +18,9 @@ import {
   CardActionArea
 } from '@mui/material';
 import Link from 'next/link';
-import { SaasProduct, Founder, Tool } from '../../../types';
-import Navbar from '../../../components/Navbar';
-import MotionWrapper from '../../../components/MotionWrapper';
+import { SaasProduct, Founder, Tool } from '../../../../types';
+import Navbar from '../../../../components/Navbar';
+import MotionWrapper from '../../../../components/MotionWrapper';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -101,7 +101,7 @@ export default function ProductDetailPage() {
             {founders.map((founder) => (
               <Grid item key={founder.id} xs={12} sm={6} md={4}>
                 <Card>
-                  <CardActionArea component={Link} href={`/founders/${founder.id}`}>
+                  <CardActionArea component={Link} href={`/success-stories/founders/${founder.id}`}>
                     <CardContent>
                       <Typography variant="h6" component="div">
                         {founder.name}
