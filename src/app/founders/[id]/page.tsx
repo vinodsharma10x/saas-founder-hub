@@ -79,9 +79,7 @@ export default function FounderDetailPage() {
       <Navbar />
       <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
         <MotionWrapper>
-          <Button component={Link} href="/founders" sx={{ mb: 2 }}>
-            Back to Founders
-          </Button>
+          
           <Typography variant="h3" component="h1" gutterBottom>
             {founder.name}
           </Typography>

@@ -1,30 +1,50 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Container, Typography, Grid, Card, CardContent, Button, Chip } from '@mui/material';
+import { Container, Typography, Grid, Card, CardContent, Button, Chip, Avatar } from '@mui/material';
 import Link from 'next/link';
 import Navbar from '../../components/Navbar';
 import MotionWrapper from '../../components/MotionWrapper';
-import { SaasProduct, Founder } from '../../types';
+import { SaasProduct, Founder, FounderProduct } from '../../types';
 import { supabase } from '../../lib/supabase';
 
-type SuccessStory = SaasProduct & { founder: Founder };
+type SuccessStory = SaasProduct & { founders: (Founder & { role: string | null })[] };
 
 export default function SuccessStoriesPage() {
   const [stories, setStories] = useState<SuccessStory[]>([]);
 
   useEffect(() => {
     async function fetchStories() {
-      const { data, error } = await supabase
+      const { data: productsData, error: productsError } = await supabase
         .from('saas_products')
-        .select(`
-          *,
-          founder:founders(*)
-        `)
+        .select('*')
         .order('founding_year', { ascending: false });
 
-      if (error) console.error('Error fetching success stories:', error);
-      else setStories(data || []);
+      if (productsError) {
+        console.error('Error fetching products:', productsError);
+        return;
+      }
+
+      const storiesWithFounders = await Promise.all(productsData.map(async (product) => {
+        const { data: founderProductsData, error: founderProductsError } = await supabase
+          .from('founder_product')
+          .select('founder_id, role, founders(*)')
+          .eq('product_id', product.id);
+
+        if (founderProductsError) {
+          console.error('Error fetching founder-product relations:', founderProductsError);
+          return { ...product, founders: [] };
+        }
+
+        const founders = founderProductsData.map(fp => ({
+          ...fp.founders,
+          role: fp.role
+        }));
+
+        return { ...product, founders };
+      }));
+
+      setStories(storiesWithFounders);
     }
 
     fetchStories();
@@ -44,21 +64,43 @@ export default function SuccessStoriesPage() {
 
           <Grid container spacing={4}>
             {stories.map((story) => (
-              <Grid item key={story.id} xs={12} sm={6} md={4}>
+              <Grid item key={story.id} xs={12} md={6}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h5" component="div">
+                    <Typography variant="h5" component="div" gutterBottom>
                       {story.name}
                     </Typography>
-                    <Typography variant="subtitle1" color="text.secondary">
-                      Founded by {story.founder.name} in {story.founding_year}
-                    </Typography>
-                    <Typography variant="body2" paragraph>
+                    <Typography variant="body2" color="text.secondary" paragraph>
                       {story.description}
                     </Typography>
-                    <Chip label={story.category} color="primary" sx={{ mr: 1 }} />
-                    <Button component={Link} href={`/products/${story.id}`} sx={{ mt: 2 }}>
-                      Learn More
+                    <Chip label={story.category} color="primary" sx={{ mr: 1, mb: 1 }} />
+                    <Chip label={`Founded: ${story.founding_year}`} variant="outlined" sx={{ mr: 1, mb: 1 }} />
+                    
+                    {story.founders.map((founder) => (
+                      <Grid container spacing={2} key={founder.id} sx={{ mt: 2 }}>
+                        <Grid item xs={12} sm={4}>
+                          <Avatar
+                            alt={founder.name}
+                            src={founder.linkedin_url || '/default-avatar.png'}
+                            sx={{ width: 80, height: 80, mb: 1 }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={8}>
+                          <Typography variant="subtitle1" gutterBottom>
+                            {founder.name}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" paragraph>
+                            {founder.role || 'Founder'}
+                          </Typography>
+                          <Button component={Link} href={`/founders/${founder.id}`} variant="outlined" size="small">
+                            View Founder
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    ))}
+                    
+                    <Button component={Link} href={`/products/${story.id}`} variant="contained" sx={{ mt: 2 }}>
+                      View Product
                     </Button>
                   </CardContent>
                 </Card>

@@ -78,9 +78,7 @@ export default function ProductDetailPage() {
       <Navbar />
       <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
         <MotionWrapper>
-          <Button component={Link} href="/products" sx={{ mb: 2 }}>
-            Back to Products
-          </Button>
+          
           <Typography variant="h3" component="h1" gutterBottom>
             {product.name}
           </Typography>
