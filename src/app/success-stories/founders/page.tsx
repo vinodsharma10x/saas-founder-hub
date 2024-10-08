@@ -75,7 +75,7 @@ export default function FoundersPage() {
             <Grid item key={founder.id} xs={12} sm={6} md={4}>
               <MotionWrapper delay={index * 0.1}>
                 <Card>
-                  <CardActionArea component={Link} href={`/founders/${founder.id}`}>
+                  <CardActionArea component={Link} href={`/success-stories/founders/${founder.id}`}>
                     <CardContent>
                       <Typography variant="h5" component="div">
                         {highlightText(founder.name, searchTerm)}
