@@ -25,3 +25,9 @@ body {
     text-wrap: balance;
   }
 }
+
+mark {
+  background-color: yellow;
+  color: black;
+  padding: 0.2em 0;
+}
