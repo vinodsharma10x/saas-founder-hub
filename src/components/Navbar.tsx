@@ -29,16 +29,16 @@ export default function Navbar() {
     <AppBar position="static" color="default" elevation={0} sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}>
       <Toolbar sx={{ flexWrap: 'wrap' }}>
         <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-          SaaS Founder Hub
+          
         </Typography>
         <nav>
           <Button component={Link} href="/" variant="text" sx={{ my: 1, mx: 1.5 }}>
             Home
           </Button>
           <Button
-            aria-controls="journey-menu"
-            aria-haspopup="true"
-            onClick={handleJourneyClick}
+            component={Link}
+            href="/journey"
+            variant="text"
             sx={{ my: 1, mx: 1.5 }}
           >
             Founder's Journey
@@ -56,12 +56,6 @@ export default function Navbar() {
             <MenuItem onClick={handleJourneyClose} component={Link} href="/journey/growth">Growth</MenuItem>
             <MenuItem onClick={handleJourneyClose} component={Link} href="/journey/scale">Scale</MenuItem>
           </Menu>
-          <Button component={Link} href="/ideas" variant="text" sx={{ my: 1, mx: 1.5 }}>
-            Ideas
-          </Button>
-          <Button component={Link} href="/tools" variant="text" sx={{ my: 1, mx: 1.5 }}>
-            Tools
-          </Button>
           <Button
             aria-controls="success-stories-menu"
             aria-haspopup="true"
@@ -81,6 +75,12 @@ export default function Navbar() {
             <MenuItem onClick={handleStoriesClose} component={Link} href="/success-stories/products">Products</MenuItem>
             <MenuItem onClick={handleStoriesClose} component={Link} href="/success-stories/founders">Founders</MenuItem>
           </Menu>
+          <Button component={Link} href="/ideas" variant="text" sx={{ my: 1, mx: 1.5 }}>
+            Ideas
+          </Button>
+          <Button component={Link} href="/tools" variant="text" sx={{ my: 1, mx: 1.5 }}>
+            Tools
+          </Button>
         </nav>
         <Box sx={{ ml: 2 }}>
           <ThemeToggle />

@@ -4,15 +4,22 @@ const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#1976d2',
+      main: '#6C63FF',
     },
     secondary: {
-      main: '#dc004e',
+      main: '#FF6584',
     },
     background: {
-      default: '#f5f5f5',
-      paper: '#ffffff',
+      default: '#F7F7F7',
+      paper: '#FFFFFF',
     },
+    text: {
+      primary: '#333333',
+      secondary: '#666666',
+    },
+  },
+  typography: {
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
   },
 });
 
