@@ -1,10 +1,13 @@
-import { AppBar, Toolbar, Typography, Button, Menu, MenuItem } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Menu, MenuItem, Box } from '@mui/material';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useTheme } from '../context/ThemeContext';  // Update this import
+import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const [journeyAnchorEl, setJourneyAnchorEl] = useState<null | HTMLElement>(null);
   const [storiesAnchorEl, setStoriesAnchorEl] = useState<null | HTMLElement>(null);
+  const { theme } = useTheme();  // Use the custom useTheme hook
 
   const handleJourneyClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setJourneyAnchorEl(event.currentTarget);
@@ -79,6 +82,9 @@ export default function Navbar() {
             <MenuItem onClick={handleStoriesClose} component={Link} href="/success-stories/founders">Founders</MenuItem>
           </Menu>
         </nav>
+        <Box sx={{ ml: 2 }}>
+          <ThemeToggle />
+        </Box>
       </Toolbar>
     </AppBar>
   );

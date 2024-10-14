@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
+import { useTheme } from '@mui/material/styles';
 
 interface MotionWrapperProps {
   children: ReactNode;
