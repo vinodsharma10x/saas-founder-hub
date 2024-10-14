@@ -1,37 +1,48 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { notFound } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Tool } from '../../../types';
 import Navbar from '../../../components/Navbar';
 import MotionWrapper from '../../../components/MotionWrapper';
 import { Container, Typography, Button, Card, CardContent, Tabs, Tab, Box, Chip } from '@mui/material';
+import { supabase } from '../../../lib/supabase';
 
 export default function ToolPage({ params }: { params: { id: string } }) {
   const [tool, setTool] = useState<Tool | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchTool() {
       try {
-        const response = await fetch(`/api/tools/${params.id}`);
-        if (!response.ok) {
-          notFound();
+        const { data, error } = await supabase
+          .from('tools')
+          .select('*')
+          .eq('id', params.id)
+          .single();
+
+        if (error) {
+          throw error;
         }
-        const data = await response.json();
-        setTool(data);
+
+        if (data) {
+          setTool(data);
+        } else {
+          router.push('/404');
+        }
       } catch (error) {
         console.error('Failed to fetch tool:', error);
-        notFound();
+        router.push('/404');
       } finally {
         setIsLoading(false);
       }
     }
     fetchTool();
-  }, [params.id]);
+  }, [params.id, router]);
 
   if (isLoading) {
     return (
