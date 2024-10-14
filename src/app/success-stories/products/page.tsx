@@ -97,7 +97,7 @@ export default function ProductsPage() {
             <Grid item key={product.id} xs={12} sm={6} md={4}>
               <MotionWrapper delay={index * 0.1}>
                 <Card>
-                  <CardActionArea component={Link} href={`/products/${product.id}`}>
+                  <CardActionArea component={Link} href={`/success-stories/products/${product.id}`}>
                     <CardContent>
                       <Typography variant="h5" component="div">
                         {highlightText(product.name, searchTerm)}
