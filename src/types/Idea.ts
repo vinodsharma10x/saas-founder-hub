@@ -7,4 +7,6 @@ export interface Idea {
   potentialSolutions: string[];
   marketPotential: string;
   challenges: string[];
+  stage: string;
+  tools?: string[];
 }

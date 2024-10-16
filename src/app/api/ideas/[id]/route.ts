@@ -1,15 +1,19 @@
 import { NextResponse } from 'next/server';
-import { ideas } from '../../../../data/ideas';
+import fs from 'fs/promises';
+import path from 'path';
+import matter from 'gray-matter';
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const idea = ideas.find(i => i.id === params.id);
-  
-  if (!idea) {
-    return new NextResponse('Not Found', { status: 404 });
+  const id = params.id;
+  try {
+    const filePath = path.join(process.cwd(), 'src', 'content', 'ideas', `${id}.md`);
+    const fileContent = await fs.readFile(filePath, 'utf8');
+    const { content } = matter(fileContent);
+    return NextResponse.json({ content });
+  } catch (err) {
+    return NextResponse.json({ content: null });
   }
-
-  return NextResponse.json(idea);
 }
