@@ -35,27 +35,7 @@ export default function Navbar() {
           <Button component={Link} href="/" variant="text" sx={{ my: 1, mx: 1.5 }}>
             Home
           </Button>
-          <Button
-            component={Link}
-            href="/journey"
-            variant="text"
-            sx={{ my: 1, mx: 1.5 }}
-          >
-            Founder's Journey
-          </Button>
-          <Menu
-            id="journey-menu"
-            anchorEl={journeyAnchorEl}
-            keepMounted
-            open={Boolean(journeyAnchorEl)}
-            onClose={handleJourneyClose}
-          >
-            <MenuItem onClick={handleJourneyClose} component={Link} href="/journey/ideation">Ideation</MenuItem>
-            <MenuItem onClick={handleJourneyClose} component={Link} href="/journey/validation">Validation</MenuItem>
-            <MenuItem onClick={handleJourneyClose} component={Link} href="/journey/building">Building</MenuItem>
-            <MenuItem onClick={handleJourneyClose} component={Link} href="/journey/growth">Growth</MenuItem>
-            <MenuItem onClick={handleJourneyClose} component={Link} href="/journey/scale">Scale</MenuItem>
-          </Menu>
+          
           <Button
             aria-controls="success-stories-menu"
             aria-haspopup="true"

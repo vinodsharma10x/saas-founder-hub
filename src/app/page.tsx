@@ -14,34 +14,10 @@ export default function Home() {
       <Navbar />
       <main>
         <HeroSection />
-        <Container sx={{ py: 8 }} maxWidth="lg">
-          <Box sx={{ my: 1 }}>
-            <Typography variant="h4" component="h2" gutterBottom align="center">
-              The Founder's Journey
-            </Typography>
-            <Typography variant="h6" component="h3" gutterBottom align="center" sx={{ mb: 4 }}>
-              From idea to successful SaaS product, we're here to support you every step of the way.
-            </Typography>
-            <Grid container spacing={4}>
-              {journeyStages.map((stage, index) => (
-                <Grid item key={index} xs={12} sm={6} md={4}>
-                  <MotionWrapper delay={index * 0.1}>
-                    <JourneyStageCard {...stage} />
-                  </MotionWrapper>
-                </Grid>
-              ))}
-            </Grid>
-            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
-              <Button variant="contained" color="primary" size="large" href="/journey/ideation">
-                Start Your Journey
-              </Button>
-            </Box>
-          </Box>
-
-          <Box sx={{ mt: 8 }}>
-            <Typography variant="h4" component="h2" gutterBottom align="center">
-              Explore Our Resources
-            </Typography>
+        <Container sx={{ py: 4 }} maxWidth="lg">
+          
+          <Box sx={{ mt: 1 }}>
+            
             <Grid container spacing={4} sx={{ mt: 2 }}>
               {features.map((feature, index) => (
                 <Grid item key={index} xs={12} sm={6} md={4}>
@@ -56,10 +32,13 @@ export default function Home() {
           <Box sx={{ mt: 8, textAlign: 'center' }}>
             <MotionWrapper>
               <Typography variant="h5" component="h3" gutterBottom>
-                Ready to start your SaaS journey?
+              Ready to Start Your Own SaaS Journey?
               </Typography>
+              <Typography variant="p" component="p" gutterBottom>
+Get our free guide on how to build and launch your SaaS product in 90 days or less!
+</Typography>
               <Button variant="contained" color="primary" size="large" href="/journey/ideation">
-                Begin Your Journey
+              Download Free Guide
               </Button>
             </MotionWrapper>
           </Box>
@@ -112,7 +91,7 @@ const features = [
     title: 'Founder\'s Journey',
     description: 'Navigate through different stages of your SaaS journey, from ideation to scale.',
     linkText: 'Explore Journey',
-    linkHref: '/journey/ideation',
+    linkHref: '/success-stories/founders',
   },
   {
     title: 'SaaS Ideas',
